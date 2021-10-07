@@ -242,7 +242,10 @@ function uploadFile(auth, data) {
   
   
   doc.saveAs(new File(Folder.desktop+"/"+JSON.title+".ai")); //=====바탕화면에 저장 (파일명 : 전화번호)
-  app.executeMenuCommand ("Print");
+  var p_option = new PrintOptions(); //====인쇄설정
+  p_option.printPreset =  "televio2"; //====기본값으로 설정
+  doc.print(p_option);
+  
   `;
 
   var fileMetadata = {
