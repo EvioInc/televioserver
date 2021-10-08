@@ -113,8 +113,8 @@ function uploadFile(auth, data) {
   var artbLeft = artb.artboardRect[0];
   var artbTop = artb.artboardRect[1];
 
-  var artbWidth = artb.artboardRect[2] - artLeft;
-  var artbHeight = artb.artboardRect[3] - artTop;
+  var artbWidth = artb.artboardRect[2] - artbLeft;
+  var artbHeight = artb.artboardRect[3] - artbTop;
 
   //=====아트보드라인 색상 설정
 
@@ -130,7 +130,7 @@ function uploadFile(auth, data) {
   artbLine.strokeWidth = 0.001;
   artbLine.strokeColor = artbLine_stroke_color;
   artbLine.filled = false;
-  
+
   //=====모양 생성
   
   switch(JSON.shape){
