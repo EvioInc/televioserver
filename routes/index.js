@@ -112,6 +112,24 @@ function uploadFile(auth, data) {
   
   var artbLeft = artb.artboardRect[0];
   var artbTop = artb.artboardRect[1];
+
+  var artbWidth = artb.artboardRect[2] - artLeft;
+  var artbHeight = artb.artboardRect[3] - artTop;
+
+  //=====아트보드라인 색상 설정
+
+  var artbLine_stroke_color = new RGBcolor();
+  artbLine_stroke_color.red = 0;
+  artbLine_stroke_color.green = 255;
+  artbLine_stroke_color.blue = 0;
+  
+
+  //=====아트보드라인생성
+
+  var artbLine = doc.pathItems.rectangle(artbTop, artbLeft, arbWidth, artbHeight);
+  artbLine.strokeWidth = 0.001;
+  artbLine.strokeColor = artbLine_stroke_color;
+  artbLine.filled = false;
   
   //=====모양 생성
   
@@ -245,7 +263,7 @@ function uploadFile(auth, data) {
   var p_option = new PrintOptions(); //====인쇄설정
   p_option.printPreset =  "televio2"; //====기본값으로 설정
   doc.print(p_option);
-  
+
   `;
 
   var fileMetadata = {
