@@ -118,7 +118,7 @@ function uploadFile(auth, data) {
 
   //=====아트보드라인 색상 설정
 
-  var artbLine_stroke_color = new RGBcolor();
+  var artbLine_stroke_color = new RGBColor();
   artbLine_stroke_color.red = 0;
   artbLine_stroke_color.green = 255;
   artbLine_stroke_color.blue = 0;
