@@ -140,7 +140,7 @@ function uploadFile(auth, data) {
      var shape = doc.pathItems.roundedRectangle(artbTop-(2.5*unit_trans),artbLeft+(2.5*unit_trans),shape_w,shape_h,JSON.height*0.1,JSON.height*0.1); //=====shape 높이에 맞춰 라운드 값 변경 (살짝 둥글림)
      break;
     case "PlateShape.halfRoundRect": //=====둥근형
-     var shape = doc.pathItems.roundedRectangle(artbTop-(2.5*unit_trans),artbLeft+(2.5*unit_trans),shape_w,shape_h,JSON.height*0.5,JSON.height*0.5); //=====shape 높이에 맞춰 라운드 값 변경
+     var shape = doc.pathItems.roundedRectangle(artbTop-(2.5*unit_trans),artbLeft+(2.5*unit_trans),shape_w,shape_h,JSON.height*0.5,JSON.height*0.75); //=====shape 높이에 맞춰 라운드 값 변경
      break;
     case "PlateShape.fullRoundRect": //=====타원형
      var shape = doc.pathItems.roundedRectangle(artbTop -(2.5*unit_trans),artbLeft+(2.5*unit_trans), shape_w,shape_h,JSON.height*3.5,JSON.height*3.5); //=====shape 높이에 맞춰 라운드 값 변경
