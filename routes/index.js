@@ -126,7 +126,9 @@ function uploadFile(auth, data) {
 
   //=====아트보드라인생성
 
-  var artbLine = doc.pathItems.rectangle(0-artbTop, artbLeft, artbWidth, artbHeight);
+  //var artbLine = doc.pathItems.rectangle(artbTop, artbLeft, artbWidth, artbHeight);
+  //var artbLine = doc.pathItems.rectangle(0-artbTop, artbLeft, artbWidth, artbHeight);
+  var artbLine = doc.pathItems.rectangle(artbTop, artbLeft, shape_w+artb_gap, shape_h+artb_gap);
   artbLine.strokeWidth = 0.001;
   artbLine.strokeColor = artbLine_stroke_color;
   artbLine.filled = false;
