@@ -3,6 +3,7 @@ var router = express.Router();
 const fs = require('fs');
 const readline = require('readline');
 const {google} = require('googleapis');
+const { GoogleAuth } = require('google-auth-library');
 const { file } = require('googleapis/build/src/apis/file');
 
 // If modifying these scopes, delete token.json.
@@ -11,6 +12,7 @@ const SCOPES = ['https://www.googleapis.com/auth/drive'];
 // created automatically when the authorization flow completes for the first
 // time.
 const TOKEN_PATH = 'token.json';
+const KEYFILEPATH = __dirname + '/omega-cider-327712-5904b845ec70.json';
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -25,70 +27,16 @@ router.get('/api/v1/', function(req, res, next) {
     "header": req.headers
   })
 });
+
 router.post('/api/v1/', function(req, res, next) {
-  // console.log(req.body);
-  // fs.writeFile(__dirname + '/data.json', JSON.stringify(req.body), async function (err) {
-  //   if (err) {
-  //     console.log('err');
-  //   }
-  // });
-  fs.readFile(__dirname + '/oauth2.keys.json', (err, content) => {
-    if (err) return console.log('Error loading client secret file:', err);
-    // Authorize a client with credentials, then call the Google Drive API.
-    // authorize(JSON.parse(content), listFiles);
-    authorize(JSON.parse(content), uploadFile, JSON.stringify(req.body));
+  const auth = new GoogleAuth({
+    keyFile: KEYFILEPATH,
+    scopes: SCOPES
   });
-  res.json({
-    "result": "success",
-    "data": req.body,
-  });
+  uploadFile(auth, JSON.stringify(req.body), req, res);
 });
 
-function authorize(credentials, callback, data) {
-  const {client_secret, client_id, redirect_uris} = credentials.web;
-  const oAuth2Client = new google.auth.OAuth2(
-      client_id, client_secret, redirect_uris[0]);
-
-  // Check if we have previously stored a token.
-  fs.readFile(TOKEN_PATH, (err, token) => {
-    if (err) return getAccessToken(oAuth2Client, callback);
-    oAuth2Client.setCredentials(JSON.parse(token));
-    callback(oAuth2Client, data);
-  });
-}
-
-/**
- * Get and store new token after prompting for user authorization, and then
- * execute the given callback with the authorized OAuth2 client.
- * @param {google.auth.OAuth2} oAuth2Client The OAuth2 client to get token for.
- * @param {getEventsCallback} callback The callback for the authorized client.
- */
-function getAccessToken(oAuth2Client, callback) {
-  const authUrl = oAuth2Client.generateAuthUrl({
-    access_type: 'offline',
-    scope: SCOPES,
-  });
-  console.log('Authorize this app by visiting this url:', authUrl);
-  const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout,
-  });
-  rl.question('Enter the code from that page here: ', (code) => {
-    rl.close();
-    oAuth2Client.getToken(code, (err, token) => {
-      if (err) return console.error('Error retrieving access token', err);
-      oAuth2Client.setCredentials(token);
-      // Store the token to disk for later program executions
-      fs.writeFile(TOKEN_PATH, JSON.stringify(token), (err) => {
-        if (err) return console.error(err);
-        console.log('Token stored to', TOKEN_PATH);
-      });
-      callback(oAuth2Client);
-    });
-  });
-}
-
-function uploadFile(auth, data) {
+function uploadFile(auth, data, req, res) {
   const drive = google.drive({version: 'v3', auth});
   var file_details = JSON.parse(data);
   console.log(file_details);
@@ -112,35 +60,15 @@ function uploadFile(auth, data) {
   
   var artbLeft = artb.artboardRect[0];
   var artbTop = artb.artboardRect[1];
-
-  var artbWidth = artb.artboardRect[2] - artbLeft;
-  var artbHeight = artb.artboardRect[3] - artbTop;
-
-  //=====아트보드라인 색상 설정
-
-  var artbLine_stroke_color = new RGBColor();
-  artbLine_stroke_color.red = 0;
-  artbLine_stroke_color.green = 255;
-  artbLine_stroke_color.blue = 0;
   
-
-  //=====아트보드라인생성
-
-  //var artbLine = doc.pathItems.rectangle(artbTop, artbLeft, artbWidth, artbHeight);
-  //var artbLine = doc.pathItems.rectangle(0-artbTop, artbLeft, artbWidth, artbHeight);
-  var artbLine = doc.pathItems.rectangle(artbTop, artbLeft, shape_w+artb_gap, shape_h+artb_gap);
-  artbLine.strokeWidth = 0.001;
-  artbLine.strokeColor = artbLine_stroke_color;
-  artbLine.filled = false;
-
   //=====모양 생성
   
   switch(JSON.shape){
     case "PlateShape.rect": //=====각진형
-     var shape = doc.pathItems.roundedRectangle(artbTop-(2.5*unit_trans),artbLeft+(2.5*unit_trans),shape_w,shape_h,JSON.height*0.2,JSON.height*0.2); //=====shape 높이에 맞춰 라운드 값 변경 (살짝 둥글림)
+     var shape = doc.pathItems.roundedRectangle(artbTop-(2.5*unit_trans),artbLeft+(2.5*unit_trans),shape_w,shape_h,JSON.height*0.1,JSON.height*0.1); //=====shape 높이에 맞춰 라운드 값 변경 (살짝 둥글림)
      break;
     case "PlateShape.halfRoundRect": //=====둥근형
-     var shape = doc.pathItems.roundedRectangle(artbTop-(2.5*unit_trans),artbLeft+(2.5*unit_trans),shape_w,shape_h,JSON.height*0.8,JSON.height*0.8); //=====shape 높이에 맞춰 라운드 값 변경
+     var shape = doc.pathItems.roundedRectangle(artbTop-(2.5*unit_trans),artbLeft+(2.5*unit_trans),shape_w,shape_h,JSON.height*0.5,JSON.height*0.5); //=====shape 높이에 맞춰 라운드 값 변경
      break;
     case "PlateShape.fullRoundRect": //=====타원형
      var shape = doc.pathItems.roundedRectangle(artbTop -(2.5*unit_trans),artbLeft+(2.5*unit_trans), shape_w,shape_h,JSON.height*3.5,JSON.height*3.5); //=====shape 높이에 맞춰 라운드 값 변경
@@ -261,11 +189,8 @@ function uploadFile(auth, data) {
   }
   
   
-  doc.saveAs(new File(Folder.desktop+"/televiotest/"+JSON.material+"_"+JSON.title+".ai")); //=====바탕화면에 저장 (파일명 : 전화번호)
-  var p_option = new PrintOptions(); //====인쇄설정
-  p_option.printPreset =  "televio2"; //====기본값으로 설정
-  doc.print(p_option);
-
+  doc.saveAs(new File(Folder.desktop+"/"+JSON.title+".ai")); //=====바탕화면에 저장 (파일명 : 전화번호)
+  app.executeMenuCommand ("Print");
   `;
 
   var fileMetadata = {
@@ -275,20 +200,26 @@ function uploadFile(auth, data) {
   };
   var media = {
     mimeType: 'plain/text',
-    // body: fs.createReadStream(__dirname + '/client_secret_361394322306-jurto7rkf9psdqvbc7dclrtug0ueb033.apps.googleusercontent.com.json')
-    // body: fs.createReadStream(__dirname + '/createShape_Text_210101.jsx')
     body: start_file + shape_file
   };
   drive.files.create({
     resource: fileMetadata,
     media: media,
-    fields: 'id,name,mimeType'
+    fields: 'id'
   }, function (err, file) {
     if (err) {
       // Handle error
       console.error(err);
+      res.json({
+        "result": "fail",
+        "data": req.body,
+      });
     } else {
       console.log('File Id:', file.id);
+      res.json({
+        "result": "success",
+        "data": req.body,
+      });
     }
   });
 
