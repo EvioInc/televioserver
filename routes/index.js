@@ -60,6 +60,25 @@ function uploadFile(auth, data, req, res) {
   
   var artbLeft = artb.artboardRect[0];
   var artbTop = artb.artboardRect[1];
+  var artbWidth = artb.artboardRect[2] - artbLeft;
+  var artbHeight = artb.artboardRect[3] - artbTop;
+
+  //=====아트보드라인 색상 설정
+
+  var artbLine_stroke_color = new RGBColor();
+  artbLine_stroke_color.red = 0;
+  artbLine_stroke_color.green = 255;
+  artbLine_stroke_color.blue = 0;
+  
+
+  //=====아트보드라인생성
+
+  //var artbLine = doc.pathItems.rectangle(artbTop, artbLeft, artbWidth, artbHeight);
+  //var artbLine = doc.pathItems.rectangle(0-artbTop, artbLeft, artbWidth, artbHeight);
+  var artbLine = doc.pathItems.rectangle(artbTop, artbLeft, shape_w+artb_gap, shape_h+artb_gap);
+  artbLine.strokeWidth = 0.001;
+  artbLine.strokeColor = artbLine_stroke_color;
+  artbLine.filled = false;
   
   //=====모양 생성
   
