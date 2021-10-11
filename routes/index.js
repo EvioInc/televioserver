@@ -55,8 +55,8 @@ function uploadFile(auth, data, req, res) {
   doc.rulerOrigin = [0,0];
   
   var artb = doc.artboards[0];
-  var artb_gap = 5 * unit_trans;
-  artb.artboardRect = [0,shape_h + artb_gap,shape_w + artb_gap,0]; //=====아트보드 설정 : 최 외곽 라인 + 5mm 씩 자동 맞춤
+  var artb_gap = 3 * unit_trans;
+  artb.artboardRect = [0,shape_h + artb_gap,shape_w + artb_gap,0]; //=====아트보드 설정 : 최 외곽 라인 + 3mm 씩 자동 맞춤
   
   var artbLeft = artb.artboardRect[0];
   var artbTop = artb.artboardRect[1];
