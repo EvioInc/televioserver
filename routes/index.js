@@ -12,7 +12,7 @@ const SCOPES = ['https://www.googleapis.com/auth/drive'];
 // created automatically when the authorization flow completes for the first
 // time.
 const TOKEN_PATH = 'token.json';
-const KEYFILEPATH = __dirname + '/omega-cider-327712-5904b845ec70.json';
+const KEYFILEPATH = __dirname + '/omega-cider-327712-c3bbd5158bbf.json';
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
